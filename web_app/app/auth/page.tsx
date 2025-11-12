@@ -86,7 +86,7 @@ function Auth() {
 
   return (
     <div className="w-screen h-screen bg-white flex flex-col items-center justify-center">
-      <div className="max-w-sm w-full p-6 shadow-md rounded-xl border">
+      <div className="max-w-sm w-full p-6 rounded-xl">
         <h1 className="text-2xl font-bold text-black mb-4 text-center">
           {isLogin ? 'Login to your account' : 'Register your account'}
         </h1>
