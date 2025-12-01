@@ -9,13 +9,17 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
-app.use(cors({ origin: process.env.ALLOWED_ORIGIN , credentials: true }))
+app.use(cors({ origin: true , credentials: true }))
 
 // router imports
 import healthCheckRouter from './routes/healthCheck.js'
 import authRouter from './routes/auth.js'
+import feedbackRouter from './routes/feedback.js'
+import floatRouter from './routes/float.js'
 
 app.use('/healthcheck', healthCheckRouter)
 app.use('/auth', authRouter)
+app.use('/feedback', feedbackRouter)
+app.use('/floats', floatRouter)
 
 export default app

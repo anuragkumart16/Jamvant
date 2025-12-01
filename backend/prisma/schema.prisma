@@ -15,7 +15,26 @@ datasource db {
 }
 
 model User {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  email String @unique
-  password String 
+  id                   String            @id @default(auto()) @map("_id") @db.ObjectId
+  email                String            @unique
+  password             String
+  resetPasswordToken   String?
+  resetPasswordExpires DateTime?
+  floats               Float[]
+  feedback             Feedback[]
+  floatCollections     FloatCollection[]
+}
+
+model Feedback {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  feedback String
+  userID   String @db.ObjectId
+  user     User   @relation(fields: [userID], references: [id])
+}
+
+model FloatCollection {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  text   String
+  userID String @db.ObjectId
+  user   User   @relation(fields: [userID], references: [id])
 }
