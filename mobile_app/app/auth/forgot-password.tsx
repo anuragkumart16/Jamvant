@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator,
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
+import BACKEND_URL from '@/contants';
 
 export default function ForgotPasswordPage() {
     const [step, setStep] = useState(1); // 1: Request Token, 2: Reset Password

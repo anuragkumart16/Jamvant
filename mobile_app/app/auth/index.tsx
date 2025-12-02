@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, Alert, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import { Ionicons } from '@expo/vector-icons';
-
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
+import BACKEND_URL from '@/contants';
 
 export default function AuthPage() {
     const [isLogin, setIsLogin] = useState(true);
@@ -90,13 +89,6 @@ export default function AuthPage() {
             setCheckingEmail(false);
         }
     };
-
-    useEffect(() => {
-        fetch('https://next-evaluating-poll-adds.trycloudflare.com/healthcheck')
-            .then(res => res.json())
-            .then(data => console.log(data))
-            .catch(err => console.log(err))
-    }, [])
 
     return (
         <View style={{ flex: 1, backgroundColor: '#000' }}>
