@@ -4,8 +4,7 @@ import { useRouter } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import { Ionicons } from '@expo/vector-icons';
 
-// const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
-const BACKEND_URL = "https://next-evaluating-poll-adds.trycloudflare.com";
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 const FEEDBACK_ENDPOINT = "/feedback/create";
 
 export default function FeedbackPage() {

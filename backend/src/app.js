@@ -22,4 +22,7 @@ app.use('/auth', authRouter)
 app.use('/feedback', feedbackRouter)
 app.use('/floats', floatRouter)
 
+import { startScheduler } from './services/scheduler.js';
+startScheduler();
+
 export default app

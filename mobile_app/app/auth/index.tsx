@@ -4,8 +4,7 @@ import { useRouter } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import { Ionicons } from '@expo/vector-icons';
 
-// const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
-const BACKEND_URL = "https://next-evaluating-poll-adds.trycloudflare.com";
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 export default function AuthPage() {
     const [isLogin, setIsLogin] = useState(true);
@@ -32,13 +31,14 @@ export default function AuthPage() {
 
         setLoading(true);
         try {
+            const pushToken = await SecureStore.getItemAsync('pushToken');
             const endpoint = isLogin ? '/auth/login' : '/auth/signup';
             const response = await fetch(`${BACKEND_URL}${endpoint}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ email, password, pushToken }),
             });
 
             const data = await response.json();

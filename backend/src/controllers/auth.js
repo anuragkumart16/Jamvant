@@ -243,6 +243,8 @@ export const forgotPassword = asyncHandler(async(req,res)=>{
     }
 })
 
+
+
 export const resetPassword = asyncHandler(async(req,res)=>{
     const {token, newPassword} = req.body
 
@@ -276,5 +278,3 @@ export const resetPassword = asyncHandler(async(req,res)=>{
 
     res.status(200).json({message:"Password reset successfully"})
 })
-
-

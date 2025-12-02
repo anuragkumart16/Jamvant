@@ -3,8 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator,
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
-// const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
-const BACKEND_URL = "https://next-evaluating-poll-adds.trycloudflare.com";
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 export default function ForgotPasswordPage() {
     const [step, setStep] = useState(1); // 1: Request Token, 2: Reset Password

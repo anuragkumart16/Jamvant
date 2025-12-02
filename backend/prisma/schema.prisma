@@ -20,6 +20,7 @@ model User {
   password             String
   resetPasswordToken   String?
   resetPasswordExpires DateTime?
+  pushToken            String?
   floats               Float[]
   feedback             Feedback[]
   floatCollections     FloatCollection[]
