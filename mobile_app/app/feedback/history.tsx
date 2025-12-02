@@ -12,6 +12,8 @@ interface FeedbackItem {
     createdAt?: string;
 }
 
+import FilterSortBar from '../../components/FilterSortBar';
+
 export default function FeedbackHistoryPage() {
     const [feedbacks, setFeedbacks] = useState<FeedbackItem[]>([]);
     const [loading, setLoading] = useState(false);
@@ -20,12 +22,29 @@ export default function FeedbackHistoryPage() {
     const [hasMore, setHasMore] = useState(true);
     const router = useRouter();
 
-    const fetchFeedback = async (pageNum = 1, shouldRefresh = false) => {
+    // Filter State
+    const [filters, setFilters] = useState({
+        search: '',
+        sortBy: 'createdAt',
+        order: 'desc',
+        startDate: undefined,
+        endDate: undefined,
+    });
+
+    const fetchFeedback = async (pageNum = 1, shouldRefresh = false, currentFilters = filters) => {
         if (loading) return;
         setLoading(true);
         try {
             const token = await SecureStore.getItemAsync('authToken');
-            const response = await fetch(`${BACKEND_URL}/feedback?page=${pageNum}&limit=10`, {
+            let url = `${BACKEND_URL}/feedback?page=${pageNum}&limit=10`;
+
+            if (currentFilters.search) url += `&search=${encodeURIComponent(currentFilters.search)}`;
+            if (currentFilters.sortBy) url += `&sortBy=${currentFilters.sortBy}`;
+            if (currentFilters.order) url += `&order=${currentFilters.order}`;
+            if (currentFilters.startDate) url += `&startDate=${currentFilters.startDate}`;
+            if (currentFilters.endDate) url += `&endDate=${currentFilters.endDate}`;
+
+            const response = await fetch(url, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();
@@ -55,12 +74,17 @@ export default function FeedbackHistoryPage() {
     const onRefresh = useCallback(() => {
         setRefreshing(true);
         fetchFeedback(1, true);
-    }, []);
+    }, [filters]);
 
     const loadMore = () => {
         if (hasMore && !loading) {
             fetchFeedback(page + 1);
         }
+    };
+
+    const handleApplyFilters = (newFilters: any) => {
+        setFilters(newFilters);
+        fetchFeedback(1, true, newFilters);
     };
 
     const renderItem = ({ item }: { item: FeedbackItem }) => (
@@ -78,6 +102,8 @@ export default function FeedbackHistoryPage() {
                 </TouchableOpacity>
                 <Text style={styles.title}>Feedback History</Text>
             </View>
+
+            <FilterSortBar onApply={handleApplyFilters} />
 
             <FlatList
                 data={feedbacks}

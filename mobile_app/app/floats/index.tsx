@@ -12,12 +12,23 @@ interface FloatItem {
     userID: string;
 }
 
+import FilterSortBar from '../../components/FilterSortBar';
+
 export default function FloatsListPage() {
     const [floats, setFloats] = useState<FloatItem[]>([]);
     const [loading, setLoading] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
+
+    // Filter State
+    const [filters, setFilters] = useState({
+        search: '',
+        sortBy: 'createdAt',
+        order: 'desc',
+        startDate: undefined,
+        endDate: undefined,
+    });
 
     // Edit Modal State
     const [modalVisible, setModalVisible] = useState(false);
@@ -27,23 +38,32 @@ export default function FloatsListPage() {
 
     const router = useRouter();
 
-    const fetchFloats = async (pageNum = 1, shouldRefresh = false) => {
+    const fetchFloats = async (pageNum = 1, shouldRefresh = false, currentFilters = filters) => {
         if (loading) return;
         setLoading(true);
         try {
             const token = await SecureStore.getItemAsync('authToken');
-            const response = await fetch(`${BACKEND_URL}/floats/get?page=${pageNum}&limit=10`, {
+            let url = `${BACKEND_URL}/floats/get?page=${pageNum}&limit=10`;
+
+            if (currentFilters.search) url += `&search=${encodeURIComponent(currentFilters.search)}`;
+            if (currentFilters.sortBy) url += `&sortBy=${currentFilters.sortBy}`;
+            if (currentFilters.order) url += `&order=${currentFilters.order}`;
+            if (currentFilters.startDate) url += `&startDate=${currentFilters.startDate}`;
+            if (currentFilters.endDate) url += `&endDate=${currentFilters.endDate}`;
+
+            const response = await fetch(url, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();
 
             if (response.ok) {
+                const newItems = data.data || [];
                 if (shouldRefresh) {
-                    setFloats(data);
+                    setFloats(newItems);
                 } else {
-                    setFloats(prev => [...prev, ...data]);
+                    setFloats(prev => [...prev, ...newItems]);
                 }
-                setHasMore(data.length === 10);
+                setHasMore(newItems.length === 10);
                 setPage(pageNum);
             }
         } catch (error) {
@@ -61,12 +81,17 @@ export default function FloatsListPage() {
     const onRefresh = useCallback(() => {
         setRefreshing(true);
         fetchFloats(1, true);
-    }, []);
+    }, [filters]);
 
     const loadMore = () => {
         if (hasMore && !loading) {
             fetchFloats(page + 1);
         }
+    };
+
+    const handleApplyFilters = (newFilters: any) => {
+        setFilters(newFilters);
+        fetchFloats(1, true, newFilters);
     };
 
     const handleDelete = async (id: string) => {
@@ -156,6 +181,8 @@ export default function FloatsListPage() {
                 </TouchableOpacity>
                 <Text style={styles.title}>My Floats</Text>
             </View>
+
+            <FilterSortBar onApply={handleApplyFilters} />
 
             <FlatList
                 data={floats}

@@ -27,15 +27,19 @@ model User {
 }
 
 model Feedback {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  feedback String
-  userID   String @db.ObjectId
-  user     User   @relation(fields: [userID], references: [id])
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  feedback  String
+  userID    String   @db.ObjectId
+  user      User     @relation(fields: [userID], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model FloatCollection {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
-  text   String
-  userID String @db.ObjectId
-  user   User   @relation(fields: [userID], references: [id])
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  text      String
+  userID    String   @db.ObjectId
+  user      User     @relation(fields: [userID], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
