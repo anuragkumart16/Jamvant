@@ -46,8 +46,7 @@ export const startScheduler = () => {
                 messages.push({
                     to: user.pushToken,
                     sound: 'default',
-                    title: 'Your Float Reminder',
-                    body: randomFloat.text,
+                    title: randomFloat.text,
                     data: { floatId: randomFloat.id },
                 });
             }
