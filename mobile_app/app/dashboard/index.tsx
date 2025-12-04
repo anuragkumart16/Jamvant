@@ -49,6 +49,12 @@ export default function DashboardPage() {
             icon: "time-outline",
             route: "/feedback/history",
             color: "#9c27b0"
+        },
+        {
+            title: "Profile",
+            icon: "person-outline",
+            route: "/profile",
+            color: "#e91e63"
         }
     ];
 

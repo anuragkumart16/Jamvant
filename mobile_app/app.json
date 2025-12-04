@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "mobile_app",
-    "slug": "mobile_app",
+    "name": "Jamvant",
+    "slug": "Jamvant",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -20,7 +20,8 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.anurag.tiwari2024.mobile_app"
+      "package": "com.anurag.tiwari2024.jamvant",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "output": "static",
@@ -40,7 +41,8 @@
           }
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-notifications"
     ],
     "experiments": {
       "typedRoutes": true,

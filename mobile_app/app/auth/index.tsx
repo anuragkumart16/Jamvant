@@ -5,6 +5,8 @@ import * as SecureStore from 'expo-secure-store';
 import { Ionicons } from '@expo/vector-icons';
 import BACKEND_URL from '@/contants';
 
+import { registerForPushNotificationsAsync } from '../../utils/notifications';
+
 export default function AuthPage() {
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState('');
@@ -30,7 +32,15 @@ export default function AuthPage() {
 
         setLoading(true);
         try {
-            const pushToken = await SecureStore.getItemAsync('pushToken');
+            let pushToken = await SecureStore.getItemAsync('pushToken');
+            console.log("Auth Submission - Push Token from Store:", pushToken); // DEBUG LOG
+
+            if (!pushToken) {
+                console.log("Push token not found in store, attempting to register again...");
+                pushToken = await registerForPushNotificationsAsync();
+                console.log("Auth Submission - Fresh Push Token:", pushToken);
+            }
+
             const endpoint = isLogin ? '/auth/login' : '/auth/signup';
             const response = await fetch(`${BACKEND_URL}${endpoint}`, {
                 method: 'POST',

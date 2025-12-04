@@ -14,7 +14,7 @@ Notifications.setNotificationHandler({
 });
 
 export async function registerForPushNotificationsAsync() {
-  let token;
+  let token: string | null = null;
 
   // Android: Set notification channel
   if (Platform.OS === 'android') {
@@ -49,6 +49,8 @@ export async function registerForPushNotificationsAsync() {
     finalStatus = status;
   }
 
+  console.log("Notification Permissions Status:", finalStatus); // DEBUG LOG
+
   if (finalStatus !== 'granted') {
     alert('Failed to get push token for push notifications!');
     return null;
@@ -76,6 +78,7 @@ export async function registerForPushNotificationsAsync() {
 
   } catch (e) {
     console.error('Error getting push token:', e);
+    alert(`Error getting push token: ${e}`);
   }
 
   return token;

@@ -9,11 +9,11 @@ export const startScheduler = () => {
     // Schedule a task to run every 2 hours
     // Cron expression: "0 */2 * * *"
     // For testing purposes, you can use "* * * * *" to run every minute
-    cron.schedule('* * * * *', async () => {
+    cron.schedule('0 */2 * * *', async () => {
         console.log('Running scheduled notification task...');
         try {
             // 1. Fetch all users with a push token
-            const users = await prisma.user.findMany({
+            const users = await prisma.User.findMany({
                 where: {
                     pushToken: {
                         not: null,
@@ -23,6 +23,8 @@ export const startScheduler = () => {
                     floatCollections: true, // Fetch their floats
                 },
             });
+
+            console.log(users);
 
             const messages = [];
 
@@ -72,3 +74,5 @@ export const startScheduler = () => {
     
     console.log('Scheduler started: Notifications will be sent every 2 hours.');
 };
+
+startScheduler()

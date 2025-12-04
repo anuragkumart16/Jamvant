@@ -293,3 +293,25 @@ export const resetPassword = asyncHandler(async (req, res) => {
 
   res.status(200).json({ message: "Password reset successfully" });
 });
+
+export const updatePushToken = asyncHandler(async (req, res) => {
+  const { pushToken } = req.body;
+  const userId = req.user.id;
+
+  if (!pushToken) {
+    return res.status(400).json({
+      message: "Push token is required",
+      success: false,
+    });
+  }
+
+  await prisma.User.update({
+    where: { id: userId },
+    data: { pushToken },
+  });
+
+  return res.status(200).json({
+    message: "Push token updated successfully",
+    success: true,
+  });
+});

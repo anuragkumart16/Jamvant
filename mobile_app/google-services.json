@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "933312490998",
+    "project_id": "jamvant-b25e0",
+    "storage_bucket": "jamvant-b25e0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:933312490998:android:08919cc27e832687c86bd7",
+        "android_client_info": {
+          "package_name": "com.anurag.tiwari2024.jamvant"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6gZxfREEmkg6z5reTJIN0t273jIa8Cro"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
