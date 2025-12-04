@@ -16,14 +16,13 @@ import healthCheckRouter from "./routes/healthCheck.js";
 import authRouter from "./routes/auth.js";
 import feedbackRouter from "./routes/feedback.js";
 import floatRouter from "./routes/float.js";
+import cronRouter from "./routes/cron.js";
 
 app.use("/healthcheck", healthCheckRouter);
 app.use("/auth", authRouter);
 app.use("/feedback", feedbackRouter);
 app.use("/floats", floatRouter);
-
-import { startScheduler } from "./services/scheduler.js";
-startScheduler();
+app.use("/cron", cronRouter);
 
 // Global Error Handler
 app.use((err, req, res, next) => {
