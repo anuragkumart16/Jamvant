@@ -1,44 +1,68 @@
 import { Expo } from "expo-server-sdk";
+import prisma from "../utils/prisma.js";
 
 const expo = new Expo();
-const pushToken = "ExponentPushToken[bFPjE8GPTdvy0fkFaTSoAc]";
 
-async function sendTestNotification() {
-  if (!Expo.isExpoPushToken(pushToken)) {
-    console.error(`Push token ${pushToken} is not a valid Expo push token`);
-    return;
-  }
+export const sendNotifications = async () => {
+  try {
+    // 1. Fetch all users with a push token
+    const users = await prisma.User.findMany({
+      where: {
+        pushToken: "ExponentPushToken[bFPjE8GPTdvy0fkFaTSoAc]",
+      },
+      include: {
+        floatCollections: true, // Fetch their floats
+      },
+    });
 
-  const messages = [
-    {
-      to: pushToken,
-      sound: "default",
-      title: "Test Notification",
-      data: { test: true },
-    },
-  ];
+    console.log(users);
 
-  console.log("Sending test notification...");
-  const chunks = expo.chunkPushNotifications(messages);
+    const messages = [];
 
-  for (const chunk of chunks) {
-    try {
-      const ticketChunk = await expo.sendPushNotificationsAsync(chunk);
-      console.log("Ticket received:", ticketChunk);
-
-      // Check for errors in tickets
-      for (const ticket of ticketChunk) {
-        if (ticket.status === "error") {
-          console.error(`Error sending notification: ${ticket.message}`);
-          if (ticket.details && ticket.details.error) {
-            console.error(`Error details: ${ticket.details.error}`);
-          }
-        }
+    for (const user of users) {
+      if (!user.pushToken || !Expo.isExpoPushToken(user.pushToken)) {
+        console.error(
+          `Push token ${user.pushToken} is not a valid Expo push token`
+        );
+        continue;
       }
-    } catch (error) {
-      console.error("Error sending chunk:", error);
-    }
-  }
-}
 
-sendTestNotification();
+      if (user.floatCollections.length === 0) {
+        continue; // User has no floats
+      }
+
+      // 2. Select a random float
+      const randomIndex = Math.floor(
+        Math.random() * user.floatCollections.length
+      );
+      const randomFloat = user.floatCollections[randomIndex];
+
+      // 3. Construct the message
+      messages.push({
+        to: user.pushToken,
+        sound: "default",
+        title: randomFloat.text,
+        data: { floatId: randomFloat.id },
+      });
+    }
+
+    // 4. Send notifications in chunks
+    const chunks = expo.chunkPushNotifications(messages);
+    const tickets = [];
+
+    for (const chunk of chunks) {
+      try {
+        const ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+        tickets.push(...ticketChunk);
+      } catch (error) {
+        console.error("Error sending chunk:", error);
+      }
+    }
+
+    console.log(`Sent ${messages.length} notifications.`);
+  } catch (error) {
+    console.error("Error in scheduled task:", error);
+  }
+};
+
+sendNotifications()
